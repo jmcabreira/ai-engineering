@@ -57,9 +57,8 @@ services:
     ports:
       - "7474:7474"
       - "7687:7687"
-    env_file: .env
     environment:
-      NEO4J_AUTH: neo4j/${NEO4J_PASSWORD}
+      NEO4J_AUTH: neo4j/dataops123
       NEO4J_PLUGINS: '["apoc"]'
       NEO4J_dbms_security_procedures_unrestricted: "apoc.*"
     volumes:
