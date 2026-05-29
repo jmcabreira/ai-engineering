@@ -1,5 +1,9 @@
 # LlamaIndex RAG
 
+![Python](https://img.shields.io/badge/python-3.11+-blue.svg)
+![LlamaIndex](https://img.shields.io/badge/LlamaIndex-latest-green.svg)
+![License](https://img.shields.io/badge/license-MIT-lightgrey.svg)
+
 A Retrieval-Augmented Generation (RAG) pipeline built with [LlamaIndex](https://www.llamaindex.ai/) and Claude (Anthropic).
 
 ## Overview
