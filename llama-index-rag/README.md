@@ -1,95 +1,58 @@
-# LlamaIndex RAG
+# DataOps Knowledge Hub
 
 ![Python](https://img.shields.io/badge/python-3.11+-blue.svg)
-![LlamaIndex](https://img.shields.io/badge/LlamaIndex-latest-green.svg)
+![LlamaIndex](https://img.shields.io/badge/LlamaIndex-0.12+-green.svg)
 ![License](https://img.shields.io/badge/license-MIT-lightgrey.svg)
 
-A Retrieval-Augmented Generation (RAG) pipeline built with [LlamaIndex](https://www.llamaindex.ai/) and Claude (Anthropic).
+Enterprise RAG system demonstrating multi-source retrieval across structured, semi-structured, and unstructured data stores.
 
-## Overview
+## Architecture
 
-This project implements a RAG system that allows you to query your own documents using natural language. Documents are indexed and stored in a vector database; at query time, relevant chunks are retrieved and passed to an LLM to generate accurate, grounded answers.
-
-## Features
-
-- Document ingestion (PDF, TXT, Markdown, HTML)
-- Vector indexing with LlamaIndex
-- Semantic search and retrieval
-- Answer generation via Claude (Anthropic API)
-- Configurable chunking and embedding strategies
-
-## Tech Stack
-
-| Component | Technology |
-|-----------|-----------|
-| RAG Framework | LlamaIndex |
-| LLM | Claude (Anthropic) |
-| Embeddings | OpenAI / HuggingFace |
-| Vector Store | ChromaDB / FAISS |
-| Language | Python 3.11+ |
-
-## Getting Started
-
-### Prerequisites
-
-- Python 3.11+
-- [uv](https://docs.astral.sh/uv/) or pip
-- Anthropic API key
-
-### Installation
-
-```bash
-git clone https://github.com/your-username/llama-index-rag.git
-cd llama-index-rag
-
-# Create virtual environment
-python -m venv .venv
-source .venv/bin/activate  # Windows: .venv\Scripts\activate
-
-# Install dependencies
-pip install -r requirements.txt
+```
+Question → RouterEngine → [Ledger | Memory | Brain] → SynthesizedResponse
 ```
 
-### Configuration
+| Domain | Store | Retrieval | Use case |
+|--------|-------|-----------|----------|
+| **Ledger** | PostgreSQL | Text-to-SQL | Counts, revenue, orders |
+| **Memory** | Qdrant | Vector search | Policies, logs, runbooks |
+| **Brain** | Neo4j | Graph traversal | Lineage, ownership, dependencies |
+
+## Quick Start
 
 ```bash
 cp .env.example .env
+# Add your OPENAI_API_KEY to .env
+
+make up        # start all services
+make ingest    # index documents into Qdrant
+make serve     # start FastAPI on :8000
+make query     # interactive query via CLI
 ```
 
-Edit `.env`:
+## Stack
 
-```env
-ANTHROPIC_API_KEY=your_anthropic_api_key
-OPENAI_API_KEY=your_openai_api_key  # if using OpenAI embeddings
-```
-
-### Usage
-
-**Index documents:**
-
-```bash
-python ingest.py --source ./docs
-```
-
-**Query:**
-
-```bash
-python query.py "What does the document say about X?"
-```
+LlamaIndex · Pydantic v2 · FastAPI · PostgreSQL · Qdrant · Neo4j · MongoDB · SeaweedFS · Docker · MCP
 
 ## Project Structure
 
 ```
-llama-index-rag/
-├── docs/               # Source documents to be indexed
-├── storage/            # Persisted vector index
-├── ingest.py           # Document ingestion pipeline
-├── query.py            # Query interface
-├── config.py           # Settings and configuration
-├── requirements.txt
-└── .env.example
+src/
+├── schemas/    ← Pydantic contracts (domain, query, api)
+├── ingestion/  ← LlamaIndex ingestion pipeline (Memory only)
+├── engines/    ← ledger, memory, brain, router
+├── api/        ← FastAPI app + routes
+└── mcp/        ← MCP Server for AI Agents
 ```
 
-## License
+## Commands
 
-MIT
+```bash
+make test              # unit tests
+make test-integration  # integration tests (requires stack running)
+make deploy-do         # deploy to DigitalOcean
+```
+
+---
+
+*Part of the Intelligent DataOps Platform — AIDE Brasil Formation (W01)*
