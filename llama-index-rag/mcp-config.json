@@ -1,0 +1,29 @@
+{
+  "_comment": "Copy the relevant block into your Claude Code MCP settings (~/.claude.json)",
+
+  "local": {
+    "mcpServers": {
+      "dataops-knowledge-hub": {
+        "command": "/Users/jonathancabreira/miniconda3/bin/python3.13",
+        "args": ["-m", "src.mcp.run"],
+        "cwd": "/Users/jonathancabreira/Documents/AIDataEngineering/llama-index-rag/llama-index-rag",
+        "env": {
+          "API_BASE_URL": "http://localhost:8000"
+        }
+      }
+    }
+  },
+
+  "production": {
+    "mcpServers": {
+      "dataops-knowledge-hub": {
+        "command": "/Users/jonathancabreira/miniconda3/bin/python3.13",
+        "args": ["-m", "src.mcp.run"],
+        "cwd": "/Users/jonathancabreira/Documents/AIDataEngineering/llama-index-rag/llama-index-rag",
+        "env": {
+          "API_BASE_URL": "https://your-app.digitalocean.app"
+        }
+      }
+    }
+  }
+}
