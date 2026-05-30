@@ -118,6 +118,27 @@ services:
     networks:
       - dataops-network
 
+  data-generator:
+    build:
+      context: ./generator
+      dockerfile: Dockerfile
+    env_file: .env
+    environment:
+      - GENERATOR_INTERVAL_SECONDS=30
+      - POSTGRES_HOST=postgres
+      - MONGO_HOST=mongo
+      - SEAWEEDFS_HOST=seaweedfs
+    depends_on:
+      postgres:
+        condition: service_healthy
+      mongo:
+        condition: service_healthy
+      seaweedfs:
+        condition: service_healthy
+    networks:
+      - dataops-network
+    restart: unless-stopped
+
 networks:
   dataops-network:
     driver: bridge
