@@ -64,7 +64,7 @@ services:
     volumes:
       - neo4j_data:/data
     healthcheck:
-      test: ["CMD-SHELL", "cypher-shell -u neo4j -p ${NEO4J_PASSWORD} 'RETURN 1' || exit 1"]
+      test: ["CMD-SHELL", "cypher-shell -u neo4j -p dataops123 'RETURN 1' || exit 1"]
       interval: 15s
       timeout: 10s
       retries: 10
@@ -86,6 +86,35 @@ services:
       timeout: 5s
       retries: 5
       start_period: 15s
+    networks:
+      - dataops-network
+
+  init-neo4j:
+    image: neo4j:5-community
+    depends_on:
+      neo4j:
+        condition: service_healthy
+    volumes:
+      - ./infra/scripts:/scripts:ro
+    entrypoint: ["/bin/bash", "/scripts/seed-neo4j.sh"]
+    restart: "no"
+    networks:
+      - dataops-network
+
+  init-seaweedfs:
+    image: amazon/aws-cli:latest
+    depends_on:
+      seaweedfs:
+        condition: service_healthy
+    volumes:
+      - ./infra/scripts:/scripts:ro
+      - ./infra/docs:/infra/docs:ro
+    entrypoint: ["/bin/bash", "/scripts/init-seaweedfs.sh"]
+    environment:
+      AWS_ACCESS_KEY_ID: any
+      AWS_SECRET_ACCESS_KEY: any
+      AWS_DEFAULT_REGION: us-east-1
+    restart: "no"
     networks:
       - dataops-network
 
