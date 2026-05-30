@@ -7,10 +7,14 @@ from pydantic import BaseModel, Field
 class QueryRequest(BaseModel):
     """Request body for POST /query."""
 
-    question: str = Field(description="The natural language question to ask the Knowledge Hub")
+    question: str = Field(
+        description="The natural language question to ask the Knowledge Hub",
+        json_schema_extra={"examples": ["How many enterprise customers do we have?"]},
+    )
     sources: Optional[list[str]] = Field(
         None,
         description="Optionally restrict to specific sources: 'ledger', 'memory', 'brain'. None = all.",
+        json_schema_extra={"examples": [None, ["ledger"], ["memory", "brain"]]},
     )
     include_metadata: bool = Field(
         default=True,
@@ -47,7 +51,7 @@ class HealthResponse(BaseModel):
 
     status: str = Field(default="healthy")
     services: dict[str, str] = Field(
-        description="Health status per service: postgres, qdrant, neo4j, seaweedfs"
+        description="Health status per service: postgres, qdrant, neo4j, mongodb, seaweedfs"
     )
     uptime_seconds: float
     version: str

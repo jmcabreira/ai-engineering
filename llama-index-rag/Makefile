@@ -21,13 +21,16 @@ ingest:
 	~/miniconda3/bin/python3.13 -m src.ingestion.run
 
 serve:
-	~/miniconda3/bin/python3.13 -m uvicorn src.api.main:app --host 0.0.0.0 --port 8000 --reload
+	~/miniconda3/bin/python3.13 -m uvicorn src.api.main:app --host 0.0.0.0 --port 8000 --reload --log-level info
 
 query:
 	@read -p "Question: " q; \
 	curl -s -X POST http://localhost:8000/api/v1/query \
 		-H "Content-Type: application/json" \
 		-d "{\"question\": \"$$q\"}" | ~/miniconda3/bin/python3.13 -m json.tool
+
+health:
+	curl -s http://localhost:8000/health | ~/miniconda3/bin/python3.13 -m json.tool
 
 # ── Tests ────────────────────────────────────────────────────
 test:

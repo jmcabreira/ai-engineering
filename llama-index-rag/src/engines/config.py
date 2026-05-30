@@ -24,6 +24,16 @@ class EngineConfig(BaseSettings):
     neo4j_user: str = "neo4j"
     neo4j_password: str = "dataops123"
 
+    # MongoDB (for health check + ingestion trigger)
+    mongo_host: str = "localhost"
+    mongo_port: int = 27017
+    mongo_db: str = "dataops"
+
+    # SeaweedFS (for health check + ingestion trigger)
+    seaweedfs_host: str = "localhost"
+    seaweedfs_port: int = 8333
+    seaweedfs_bucket: str = "dataops-lake"
+
     model_config = {"env_file": ".env", "extra": "ignore"}
 
     @property
