@@ -34,13 +34,13 @@ health:
 
 # ── Tests ────────────────────────────────────────────────────
 test:
-	pytest tests/unit -v
+	~/miniconda3/bin/python3.13 -m pytest tests/unit -v
 
 test-integration:
-	pytest tests/integration -v --timeout=120
+	~/miniconda3/bin/python3.13 -m pytest tests/integration -v --timeout=120
 
 test-all:
-	pytest tests/ -v --timeout=120
+	~/miniconda3/bin/python3.13 -m pytest tests/ -v --timeout=120
 
 # ── Production (DigitalOcean) ────────────────────────────────
 deploy-do:
