@@ -1,14 +1,33 @@
-.PHONY: up down logs restart status ingest serve query test test-integration test-all deploy-do destroy-do
+.PHONY: install up down logs logs-app logs-generator restart status \
+        ingest ingest-limit serve query health \
+        test test-integration test-all \
+        deploy-do destroy-do \
+        prod-up prod-down prod-logs prod-restart prod-status prod-ingest
 
-# ── Infrastructure ──────────────────────────────────────────
+PYTHON := ~/miniconda3/bin/python3.13
+
+# ── Setup ────────────────────────────────────────────────────
+install:
+	$(PYTHON) -m pip install -e ".[dev]"
+
+# ── Infrastructure ───────────────────────────────────────────
 up:
 	docker compose up -d
 
 down:
 	docker compose down
 
+down-v:
+	docker compose down -v
+
 logs:
 	docker compose logs -f
+
+logs-app:
+	docker compose logs -f app
+
+logs-generator:
+	docker compose logs -f data-generator
 
 restart:
 	docker compose down && docker compose up -d
@@ -16,31 +35,34 @@ restart:
 status:
 	docker compose ps
 
-# ── App ─────────────────────────────────────────────────────
+# ── App ──────────────────────────────────────────────────────
 ingest:
-	~/miniconda3/bin/python3.13 -m src.ingestion.run
+	$(PYTHON) -m src.ingestion.run
+
+ingest-limit:
+	$(PYTHON) -m src.ingestion.run --limit 20
 
 serve:
-	~/miniconda3/bin/python3.13 -m uvicorn src.api.main:app --host 0.0.0.0 --port 8000 --reload --log-level info
+	$(PYTHON) -m uvicorn src.api.main:app --host 0.0.0.0 --port 8000 --reload --log-level info
 
 query:
 	@read -p "Question: " q; \
 	curl -s -X POST http://localhost:8000/api/v1/query \
 		-H "Content-Type: application/json" \
-		-d "{\"question\": \"$$q\"}" | ~/miniconda3/bin/python3.13 -m json.tool
+		-d "{\"question\": \"$$q\"}" | $(PYTHON) -m json.tool
 
 health:
-	curl -s http://localhost:8000/health | ~/miniconda3/bin/python3.13 -m json.tool
+	curl -s http://localhost:8000/health | $(PYTHON) -m json.tool
 
 # ── Tests ────────────────────────────────────────────────────
 test:
-	~/miniconda3/bin/python3.13 -m pytest tests/unit -v
+	$(PYTHON) -m pytest tests/unit -v
 
 test-integration:
-	~/miniconda3/bin/python3.13 -m pytest tests/integration -v --timeout=120
+	$(PYTHON) -m pytest tests/integration -v --timeout=120
 
 test-all:
-	~/miniconda3/bin/python3.13 -m pytest tests/ -v --timeout=120
+	$(PYTHON) -m pytest tests/ -v --timeout=120
 
 # ── Production (DigitalOcean) ────────────────────────────────
 deploy-do:
