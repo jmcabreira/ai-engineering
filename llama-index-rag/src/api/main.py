@@ -1,5 +1,8 @@
 """Entry point: uvicorn src.api.main:app"""
 import uvicorn
+from dotenv import load_dotenv
+
+load_dotenv()
 
 from src.api.app import create_app
 

@@ -1,4 +1,5 @@
-"""Entry point for the ingestion pipeline. Run with: python -m src.ingestion.run"""
+"""Entry point for the ingestion pipeline. Run with: python -m src.ingestion.run [--limit N]"""
+import argparse
 import asyncio
 import logging
 
@@ -10,7 +11,7 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(me
 logger = logging.getLogger(__name__)
 
 
-async def main() -> None:
+async def main(limit: int | None = None) -> None:
     config = IngestionConfig()
 
     logger.info("Loading documents from SeaweedFS...")
@@ -22,6 +23,9 @@ async def main() -> None:
     logger.info("  → %d documents from MongoDB", len(mongo_docs))
 
     all_documents = seaweedfs_docs + mongo_docs
+    if limit:
+        all_documents = all_documents[:limit]
+        logger.info("Limiting to %d documents for validation", limit)
     logger.info("Total documents to ingest: %d", len(all_documents))
 
     pipeline = build_pipeline(config)
@@ -30,4 +34,7 @@ async def main() -> None:
 
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--limit", type=int, default=None, help="Max documents to ingest")
+    args = parser.parse_args()
+    asyncio.run(main(limit=args.limit))

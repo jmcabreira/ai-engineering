@@ -14,7 +14,7 @@ from llama_index.core.schema import Document
 from llama_index.embeddings.openai import OpenAIEmbedding
 from llama_index.llms.openai import OpenAI
 from llama_index.vector_stores.qdrant import QdrantVectorStore
-from qdrant_client import QdrantClient
+from qdrant_client import AsyncQdrantClient, QdrantClient
 from qdrant_client.models import Distance, VectorParams
 
 from src.ingestion.config import IngestionConfig
@@ -54,10 +54,12 @@ def build_pipeline(config: IngestionConfig) -> IngestionPipeline:
     )
 
     qdrant_client = QdrantClient(host=config.qdrant_host, port=config.qdrant_port)
+    async_qdrant_client = AsyncQdrantClient(host=config.qdrant_host, port=config.qdrant_port)
     # text-embedding-3-small produces 1536-dim vectors
     _ensure_collection(qdrant_client, config.qdrant_collection, vector_size=1536)
     vector_store = QdrantVectorStore(
         client=qdrant_client,
+        aclient=async_qdrant_client,
         collection_name=config.qdrant_collection,
     )
 
