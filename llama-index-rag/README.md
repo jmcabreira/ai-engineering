@@ -8,6 +8,8 @@ Enterprise RAG system demonstrating multi-source retrieval across structured, se
 
 ## Architecture
 
+![Architecture](images/architecture.png)
+
 ```
 Question → RouterEngine → [Ledger | Memory | Brain] → SynthesizedResponse
 ```

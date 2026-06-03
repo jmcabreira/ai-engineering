@@ -132,3 +132,37 @@ Referência completa: `sketch/plan.md`.
 - **NÃO crie frontend/UI** — o sistema é API-only (FastAPI + MCP).
 - **NÃO ingira dados do PostgreSQL ou Neo4j no Qdrant** — eles são consultados diretamente.
 - **NÃO misture responsabilidades** — `RouterEngine` orquestra, engines consultam, API serve.
+
+
+## MCP Tools Available
+This project exposes a local MCP server (`dataops-knowledge-hub`).
+When asked business questions about customers, pipelines, SLAs, revenue,
+data quality, or infrastructure impact — ALWAYS use the
+`
+query_
+knowledge
+hub`
+_
+MCP tool instead of trying to answer from code or documentation.
+Available MCP tools:
+`
+-
+query_
+knowledge
+hub`
+_
+Postgres/Qdrant/Neo4j)
+-
+`
+check
+_platform
+_
+health`
+-
+`trigger
+_
+ingestion
+`
+— Ask any business question (routes to
+— Check status of all data stores
+— Re-index documents from SeaweedFS and MongoDB
