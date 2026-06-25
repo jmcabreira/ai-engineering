@@ -1,0 +1,29 @@
+table,column,type,description,owner,pii_flag,sla
+customers,id,integer,Primary key auto-increment,team-platform,false,N/A
+customers,name,varchar,Full customer name,team-platform,true,N/A
+customers,email,varchar,Customer email address,team-platform,true,N/A
+customers,plan,varchar,Subscription tier (free/pro/enterprise),team-billing,false,N/A
+customers,company,varchar,Company name,team-platform,false,N/A
+customers,created_at,timestamp,Account creation timestamp,team-platform,false,N/A
+products,id,integer,Primary key auto-increment,team-platform,false,N/A
+products,name,varchar,Product display name,team-platform,false,N/A
+products,category,varchar,Product category (Analytics/Integration/Storage/Compute),team-platform,false,N/A
+products,price,decimal,Unit price in BRL,team-billing,false,N/A
+products,sku,varchar,Stock keeping unit — unique product identifier,team-platform,false,N/A
+products,active,boolean,Whether product is available for purchase,team-platform,false,N/A
+orders,id,integer,Primary key auto-increment,team-billing,false,N/A
+orders,customer_id,integer,FK to customers table,team-billing,false,N/A
+orders,product_id,integer,FK to products table,team-billing,false,N/A
+orders,amount,decimal,Order total in BRL,team-billing,false,daily
+orders,quantity,integer,Number of units ordered,team-billing,false,N/A
+orders,status,varchar,Order lifecycle status (pending/completed/failed/refunded),team-billing,false,N/A
+orders,created_at,timestamp,Order creation timestamp,team-billing,false,daily
+fact_revenue,date,date,Aggregation date,team-analytics,false,daily
+fact_revenue,total_revenue,decimal,Daily revenue sum in BRL,team-analytics,false,daily
+fact_revenue,order_count,integer,Number of completed orders on that date,team-analytics,false,daily
+fact_revenue,new_customers,integer,New customers acquired on that date,team-analytics,false,daily
+dim_customers,id,integer,Customer surrogate key,team-analytics,false,N/A
+dim_customers,customer_id,integer,FK to source customers table,team-analytics,false,N/A
+dim_customers,plan,varchar,Subscription tier at time of snapshot,team-analytics,false,N/A
+dim_customers,company,varchar,Company name at time of snapshot,team-analytics,false,N/A
+dim_customers,snapshot_date,date,Date this snapshot was taken,team-analytics,false,daily
